@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Sistema de Boletos</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .login-container {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 30px;
+            font-size: 28px;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        input {
+            padding: 15px;
+            border: 2px solid #e1e5e9;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        p {
+            margin-top: 20px;
+            color: #666;
+        }
+
+        a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        /* Estilos para las páginas del sistema */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            margin-bottom: 30px;
+            border-radius: 15px;
+            text-align: center;
+        }
+
+        .card {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .form-group select,
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e1e5e9;
+            border-radius: 8px;
+            font-size: 16px;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            margin-left: 10px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .seat {
+            width: 40px;
+            height: 40px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            display: inline-block;
+            margin: 5px;
+            cursor: pointer;
+            text-align: center;
+            line-height: 36px;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+
+        .seat.available {
+            background: #28a745;
+            color: white;
+            border-color: #28a745;
+        }
+
+        .seat.occupied {
+            background: #dc3545;
+            color: white;
+            border-color: #dc3545;
+            cursor: not-allowed;
+        }
+
+        .seat.selected {
+            background: #007bff;
+            color: white;
+            border-color: #007bff;
+        }
+
+        .navigation {
+            margin-top: 30px;
+            text-align: center;
+        }
+
+        .alert {
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .alert-success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .alert-info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+
+        @media (max-width: 768px) {
+            .login-container {
+                padding: 20px;
+                margin: 20px;
+            }
+            
+            .container {
+                padding: 10px;
+            }
+            
+            .grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <h1>🚌 Sistema de Boletos</h1>
+        <form id="loginForm">
+            <input type="email" id="email" placeholder="Correo electrónico" required>
+            <input type="password" id="password" placeholder="Contraseña" required>
+            <button type="submit">Ingresar</button>
+        </form>
+        <p>¿No tienes cuenta? <a href="#" onclick="showRegister()">Regístrate aquí</a></p>
+    </div>
+
+    <script>
+        // Función para manejar el login
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            
+            // Simulación de login exitoso
+            if (email && password) {
+                alert('¡Bienvenido al Sistema de Boletos!');
+                // Aquí podrías redirigir a la página de selección de rutas
+                showRouteSelection();
+            }
+        });
+
+        // Función para mostrar registro
+        function showRegister() {
+            alert('Funcionalidad de registro - En desarrollo');
+        }
+
+        // Función para mostrar selección de rutas
+        function showRouteSelection() {
+            document.body.innerHTML = `
+                <div class="container">
+                    <div class="header">
+                        <h1>🚌 Selección de Ruta</h1>
+                        <p>Elige tu destino y horario preferido</p>
+                    </div>
+                    
+                    <div class="card">
+                        <form id="routeForm">
+                            <div class="grid">
+                                <div class="form-group">
+                                    <label for="origen">Ciudad de Origen</label>
+                                    <select id="origen" required>
+                                        <option value="">Selecciona origen</option>
+                                        <option value="quito">Quito</option>
+                                        <option value="guayaquil">Guayaquil</option>
+                                        <option value="cuenca">Cuenca</option>
+                                        <option value="ambato">Ambato</option>
+                                        <option value="riobamba">Riobamba</option>
+                                    </select>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="destino">Ciudad de Destino</label>
+                                    <select id="destino" required>
+                                        <option value="">Selecciona destino</option>
+                                        <option value="quito">Quito</option>
+                                        <option value="guayaquil">Guayaquil</option>
+                                        <option value="cuenca">Cuenca</option>
+                                        <option value="ambato">Ambato</option>
+                                        <option value="riobamba">Riobamba</option>
+                                    </select>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="fecha">Fecha de Viaje</label>
+                                    <input type="date" id="fecha" required>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="pasajeros">Número de Pasajeros</label>
+                                    <select id="pasajeros" required>
+                                        <option value="1">1 Pasajero</option>
+                                        <option value="2">2 Pasajeros</option>
+                                        <option value="3">3 Pasajeros</option>
+                                        <option value="4">4 Pasajeros</option>
+                                        <option value="5">5+ Pasajeros</option>
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <div class="navigation">
+                                <button type="submit" class="btn">Buscar Horarios</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            `;
+            
+            // Configurar fecha mínima (hoy)
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('fecha').setAttribute('min', today);
+            
+            // Manejar envío del formulario
+            document.getElementById('routeForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                showSchedules();
+            });
+        }
+
+        // Función para mostrar horarios
+        function showSchedules() {
+            const origen = document.getElementById('origen').value;
+            const destino = document.getElementById('destino').value;
+            const fecha = document.getElementById('fecha').value;
+            
+            document.body.innerHTML = `
+                <div class="container">
+                    <div class="header">
+                        <h1>🕐 Horarios Disponibles</h1>
+                        <p>Ruta: ${origen.toUpperCase()} → ${destino.toUpperCase()}</p>
+                        <p>Fecha: ${fecha}</p>
+                    </div>
+                    
+                    <div class="grid">
+                        <div class="card">
+                            <h3>🌅 Servicio Ejecutivo - 06:00 AM</h3>
+                            <p><strong>Precio:</strong> $15.00</p>
+                            <p><strong>Duración:</strong> 4 horas</p>
+                            <p><strong>Asientos disponibles:</strong> 12</p>
+                            <button class="btn" onclick="selectSeats('06:00', 'Ejecutivo', 15)">Seleccionar</button>
+                        </div>
+                        
+                        <div class="card">
+                            <h3>☀️ Servicio Turístico - 10:00 AM</h3>
+                            <p><strong>Precio:</strong> $25.00</p>
+                            <p><strong>Duración:</strong> 5 horas</p>
+                            <p><strong>Asientos disponibles:</strong> 8</p>
+                            <button class="btn" onclick="selectSeats('10:00', 'Turístico', 25)">Seleccionar</button>
+                        </div>
+                        
+                        <div class="card">
+                            <h3>🌆 Servicio Económico - 14:00 PM</h3>
+                            <p><strong>Precio:</strong> $10.00</p>
+                            <p><strong>Duración:</strong> 5 horas</p>
+                            <p><strong>Asientos disponibles:</strong> 15</p>
+                            <button class="btn" onclick="selectSeats('14:00', 'Económico', 10)">Seleccionar</button>
+                        </div>
+                        
+                        <div class="card">
+                            <h3>🌙 Servicio Nocturno - 22:00 PM</h3>
+                            <p><strong>Precio:</strong> $18.00</p>
+                            <p><strong>Duración:</strong> 6 horas</p>
+                            <p><strong>Asientos disponibles:</strong> 6</p>
+                            <button class="btn" onclick="selectSeats('22:00', 'Nocturno', 18)">Seleccionar</button>
+                        </div>
+                    </div>
+                    
+                    <div class="navigation">
+                        <button class="btn btn-secondary" onclick="showRouteSelection()">Volver</button>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Función para seleccionar asientos
+        function selectSeats(horario, servicio, precio) {
+            const seats = [];
+            for (let i = 1; i <= 40; i++) {
+                const status = Math.random() > 0.3 ? 'available' : 'occupied';
+                seats.push({ number: i, status: status });
+            }
+            
+            document.body.innerHTML = `
+                <div class="container">
+                    <div class="header">
+                        <h1>🪑 Seleccionar Asientos</h1>
+                        <p>Servicio ${servicio} - ${horario}</p>
+                        <p>Precio por asiento: $${precio}</p>
+                    </div>
+                    
+                    <div class="card">
+                        <div class="alert alert-info">
+                            <strong>Leyenda:</strong>
+                            <span class="seat available" style="margin: 0 10px;">1</span> Disponible
+                            <span class="seat occupied" style="margin: 0 10px;">2</span> Ocupado
+                            <span class="seat selected" style="margin: 0 10px;">3</span> Seleccionado
+                        </div>
+                        
+                        <div style="text-align: center; margin-bottom: 20px;">
+                            <h4>🚌 Frente del Bus</h4>
+                        </div>
+                        
+                        <div id="seatMap" style="text-align: center;">
+                            ${seats.map(seat => 
+                                `<span class="seat ${seat.status}" data-seat="${seat.number}" onclick="toggleSeat(${seat.number})">${seat.number}</span>${seat.number % 4 === 0 ? '<br>' : ''}`
+                            ).join('')}
+                        </div>
+                        
+                        <div id="selectedInfo" style="margin-top: 20px; text-align: center;">
+                            <p><strong>Asientos seleccionados:</strong> <span id="selectedSeats">Ninguno</span></p>
+                            <p><strong>Total a pagar:</strong> $<span id="totalPrice">0.00</span></p>
+                        </div>
+                        
+                        <div class="navigation">
+                            <button class="btn" onclick="proceedToPayment()" id="payBtn" style="display: none;">Continuar al Pago</button>
+                            <button class="btn btn-secondary" onclick="showSchedules()">Volver</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            window.selectedSeats = [];
+            window.seatPrice = precio;
+        }
+
+        // Función para alternar selección de asientos
+        function toggleSeat(seatNumber) {
+            const seat = document.querySelector(`[data-seat="${seatNumber}"]`);
+            
+            if (seat.classList.contains('occupied')) {
+                alert('Este asiento ya está ocupado');
+                return;
+            }
+            
+            if (seat.classList.contains('selected')) {
+                seat.classList.remove('selected');
+                seat.classList.add('available');
+                window.selectedSeats = window.selectedSeats.filter(s => s !== seatNumber);
+            } else {
+                seat.classList.remove('available');
+                seat.classList.add('selected');
+                window.selectedSeats.push(seatNumber);
+            }
+            
+            updateSelectedInfo();
+        }
+
+        // Función para actualizar información de asientos seleccionados
+        function updateSelectedInfo() {
+            const selectedSeatsEl = document.getElementById('selectedSeats');
+            const totalPriceEl = document.getElementById('totalPrice');
+            const payBtn = document.getElementById('payBtn');
+            
+            if (window.selectedSeats.length === 0) {
+                selectedSeatsEl.textContent = 'Ninguno';
+                totalPriceEl.textContent = '0.00';
+                payBtn.style.display = 'none';
+            } else {
+                selectedSeatsEl.textContent = window.selectedSeats.join(', ');
+                totalPriceEl.textContent = (window.selectedSeats.length * window.seatPrice).toFixed(2);
+                payBtn.style.display = 'inline-block';
+            }
+        }
+
+        // Función para proceder al pago
+        function proceedToPayment() {
+            const total = (window.selectedSeats.length * window.seatPrice).toFixed(2);
+            
+            document.body.innerHTML = `
+                <div class="container">
+                    <div class="header">
+                        <h1>💳 Proceso de Pago</h1>
+                        <p>Complete la información para finalizar su compra</p>
+                    </div>
+                    
+                    <div class="card">
+                        <div class="alert alert-success">
+                            <strong>Resumen de su compra:</strong><br>
+                            Asientos: ${window.selectedSeats.join(', ')}<br>
+                            Total a pagar: $${total}
+                        </div>
+                        
+                        <form id="paymentForm">
+                            <div class="grid">
+                                <div class="form-group">
+                                    <label for="nombreCompleto">Nombre Completo</label>
+                                    <input type="text" id="nombreCompleto" required>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="cedula">Cédula/Pasaporte</label>
+                                    <input type="text" id="cedula" required>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="telefono">Teléfono</label>
+                                    <input type="tel" id="telefono" required>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="email">Email</label>
+                                    <input type="email" id="email" required>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="tarjeta">Número de Tarjeta</label>
+                                    <input type="text" id="tarjeta" placeholder="1234 5678 9012 3456" required>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="vencimiento">Fecha de Vencimiento</label>
+                                    <input type="text" id="vencimiento" placeholder="MM/AA" required>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="cvv">CVV</label>
+                                    <input type="text" id="cvv" placeholder="123" required>
+                                </div>
+                            </div>
+                            
+                            <div class="navigation">
+                                <button type="submit" class="btn">Pagar $${total}</button>
+                                <button type="button" class="btn btn-secondary" onclick="history.back()">Volver</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            `;
+            
+            document.getElementById('paymentForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                showConfirmation();
+            });
+        }
+
+        // Función para mostrar confirmación
+        function showConfirmation() {
+            document.body.innerHTML = `
+                <div class="container">
+                    <div class="header">
+                        <h1>✅ ¡Compra Exitosa!</h1>
+                        <p>Su boleto ha sido generado correctamente</p>
+                    </div>
+                    
+                    <div class="card">
+                        <div class="alert alert-success">
+                            <h3>🎫 Detalles del Boleto</h3>
+                            <p><strong>Código de Reserva:</strong> ${generateReservationCode()}</p>
+                            <p><strong>Asientos:</strong> ${window.selectedSeats.join(', ')}</p>
+                            <p><strong>Total Pagado:</strong> $${(window.selectedSeats.length * window.seatPrice).toFixed(2)}</p>
+                            <p><strong>Fecha:</strong> ${new Date().toLocaleDateString()}</p>
+                        </div>
+                        
+                        <div style="text-align: center; margin-top: 30px;">
+                            <h4>📧 Se ha enviado la confirmación a su email</h4>
+                            <p>Presente este código en la terminal para abordar el bus</p>
+                        </div>
+                        
+                        <div class="navigation">
+                            <button class="btn" onclick="location.reload()">Nueva Reserva</button>
+                            <button class="btn btn-secondary" onclick="window.print()">Imprimir Boleto</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Función para generar código de reserva
+        function generateReservationCode() {
+            return 'BUS-' + Math.random().toString(36).substr(2, 9).toUpperCase();
+        }
+    </script>
+</body>
+</html>
